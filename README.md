@@ -48,7 +48,7 @@ Explanation: The order is invalid, so return "".
 Before we try to solvs this problem, lets first understand one very important thing.
 
 **The letters within a single word don't tell us anything about the relative order.** 
-For example, the presence of the word `train` in the list does not tell us that the letter t is before the letter r.
+For example, the presence of the word `train` in the list does not tell us that the letter t is before the letter r in the dictionary.
 
 
 # Implementation :
