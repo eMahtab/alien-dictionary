@@ -95,6 +95,7 @@ class Solution {
         for(int i = 1; i < words.length; i++) {
             String first = words[i-1];
             String second = words[i];
+            // Check If second word is a prefix of first word, If thats the case its not a valid alien dictionary
             if(first.startsWith(second) && first.length() > second.length()) {
                 graph.clear();
                 return;
