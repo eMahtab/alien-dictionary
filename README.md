@@ -40,12 +40,11 @@ Explanation: The order is invalid, so return "".
 ```
 
 **Note:**
-
 1. You may assume all letters are in lowercase.
 2. If the order is invalid, return an empty string.
 3. There may be multiple valid order of letters, return any one of them is fine.
 
-#Approach :
+## Approach :
 Before we try to solvs this problem, lets first understand one very important thing.
 
 **The letters within a single word don't tell us anything about the relative order.** 
