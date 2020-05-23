@@ -73,8 +73,6 @@ class Solution {
         }
         while(!q.isEmpty()) {
             char current = q.poll();
-            if(graph.get(current).size() == 0)
-                continue;
             for(char neighbor : graph.get(current)) {
                 indegree[neighbor - 'a']--;
                 if(indegree[neighbor - 'a'] == 0) {
