@@ -104,6 +104,10 @@ class Solution {
                 if(first.charAt(j) != second.charAt(j)) {
                     char out = first.charAt(j);
                     char in = second.charAt(j);
+                    // If check is required, e.g. for words {ox, sx, to, ts, x}
+                    // We should not increment the indegree multiple times because of same dependency/relationship
+                    // comparison between words ox and sx tells us that o comes before s
+                    // again comparison between words to and ts tells us o comes before s
                     if(!graph.get(out).contains(in)) {
                         graph.get(out).add(in);
                         indegree[in - 'a']++;
