@@ -55,67 +55,66 @@ So to find the relative order of letters in the dictionary we must compare two w
 ```java
 class Solution {
     public String alienOrder(String[] words) {
+        Map<Character, Set<Character>> map = new HashMap<>();
         int[] indegree = new int[26];
-        Map<Character, Set<Character>> graph = new HashMap<>();
-        buildGraph(graph, words, indegree);
-        return bfs(graph, indegree);
+        buildGraph(map, indegree, words);
+        return bfs(map, indegree);
     }
     
-    private String bfs(Map<Character, Set<Character>> graph, int[] indegree) {
-        StringBuilder sb = new StringBuilder();
-        int totalChars = graph.size();
-        Queue<Character> q = new LinkedList<>();
-        for(char c : graph.keySet()) {
-            if(indegree[c - 'a'] == 0) {
-                sb.append(c);
-                q.offer(c);
-            }
-        }
-        while(!q.isEmpty()) {
-            char current = q.poll();
-            for(char neighbor : graph.get(current)) {
-                indegree[neighbor - 'a']--;
-                if(indegree[neighbor - 'a'] == 0) {
-                    q.offer(neighbor);
-                    sb.append(neighbor);
-                }
-            }
-        }
-        return sb.length() == totalChars ? sb.toString() : "";
-    }
-    
-    private void buildGraph(Map<Character, Set<Character>> graph, String[] words, int[] indegree) {
+    private void buildGraph(Map<Character, Set<Character>> map, int[] indegree, String[] words) {
         for(String word : words) {
             for(char ch : word.toCharArray())
-                graph.putIfAbsent(ch, new HashSet<>());
+                map.putIfAbsent(ch, new HashSet<Character>());
         }
         
-        for(int i = 1; i < words.length; i++) {
-            String first = words[i-1];
-            String second = words[i];
+        for(int i = 0; i < words.length - 1; i++) {
+            String first = words[i];
+            String second = words[i+1];
             // Check If second word is a prefix of first word, If thats the case its not a valid alien dictionary
             if(first.startsWith(second) && first.length() > second.length()) {
-                graph.clear();
+                map.clear();
                 return;
             }
             int minLength = Math.min(first.length(), second.length());
-            
-            for(int j = 0; j < minLength; j++) {
-                if(first.charAt(j) != second.charAt(j)) {
-                    char out = first.charAt(j);
-                    char in = second.charAt(j);
+            for(int index = 0; index < minLength; index++) {
+                if(first.charAt(index) != second.charAt(index)) {
                     // If check is required, e.g. for words {ox, sx, to, ts, x}
                     // We should not increment the indegree multiple times because of same dependency/relationship
                     // comparison between words ox and sx tells us that o comes before s
                     // again comparison between words to and ts tells us o comes before s
-                    if(!graph.get(out).contains(in)) {
-                        graph.get(out).add(in);
-                        indegree[in - 'a']++;
+                    if(!map.get(first.charAt(index)).contains(second.charAt(index))) {
+                        indegree[second.charAt(index) - 'a']++;
+                        map.get(first.charAt(index)).add(second.charAt(index));
                     }
-                    break;    
+                    break;
+                }
+            }
+                
+        }
+    }
+    
+    private String bfs(Map<Character,Set<Character>> map, int[] indegree) {
+        Queue<Character> q = new LinkedList<>();
+        int totalChars = map.size();
+        StringBuilder sb = new StringBuilder();
+        for(Character ch : map.keySet()) { 
+            if(indegree[ch - 'a'] == 0) // if(map.get(ch).size() == 0) , this will be wrong to check the 0 indegree node
+                q.add(ch);
+        }
+        int count = 0;
+        while(!q.isEmpty()) {
+            char ch = q.poll();
+            count++;
+            sb.append(ch);
+            for(char c : map.get(ch)) {
+                indegree[c - 'a']--;
+                if(indegree[c - 'a'] == 0) {
+                    q.add(c);
                 }
             }
         }
+        
+       return  count == totalChars ? sb.toString() : "";
     }
 }
 ```
