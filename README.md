@@ -98,7 +98,8 @@ class Solution {
         int totalChars = map.size();
         StringBuilder sb = new StringBuilder();
         for(Character ch : map.keySet()) { 
-            if(indegree[ch - 'a'] == 0) // if(map.get(ch).size() == 0) , this will be wrong to check the 0 indegree node
+            // if(map.get(ch).size() == 0) , this will be wrong to check the 0 indegree node
+            if(indegree[ch - 'a'] == 0) 
                 q.add(ch);
         }
         int count = 0;
