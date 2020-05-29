@@ -51,6 +51,8 @@ Before we try to solve this problem, lets first understand one very important th
 For example, the presence of the word `train` in the list does not tell us that the letter t is before the letter r in the dictionary.
 So to find the relative order of letters in the dictionary we must compare two words.
 
+![Graph](graph.JPG?raw=true "Graph")
+
 # Implementation :
 ```java
 class Solution {
