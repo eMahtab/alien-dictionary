@@ -180,6 +180,7 @@ class Solution {
 1. Prefix check is required to handle e.g. ["apple", "app"] these type of inputs. 
 2. Don't compare after the first different character, so break; is must
 3. Don't forget array's have `length` property while strings have `length()` method
+4. In second implementation we are using `Map` for storing indegree for each character and we are using `Set` to know all the distinct characters in the words array.
 
 # References :
 https://www.youtube.com/watch?v=LA0X_N-dEsg
