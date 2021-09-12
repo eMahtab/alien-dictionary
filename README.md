@@ -121,6 +121,61 @@ class Solution {
     }
 }
 ```
+
+### Implementation 2
+```java
+class Solution {
+    public String alienOrder(String[] words) {
+        if(words == null || words.length == 0)
+            return "";
+        Set<Character> distinct = new HashSet<>();
+        for(String str : words) {
+            for(char ch : str.toCharArray())
+                distinct.add(ch);
+        }   
+        List<char[]> order = new ArrayList<>();
+        for(int i = 0; i < words.length - 1; i++) {
+            String str1 = words[i];
+            String str2 = words[i+1];
+            int minLength = Math.min(str1.length(), str2.length());
+            for(int j = 0; j < minLength; j++) {
+                if(str1.charAt(j) != str2.charAt(j)) {
+                    order.add(new char[]{str1.charAt(j) , str2.charAt(j)});
+                    break;
+                }
+            }
+            if(str1.startsWith(str2) && str1.length() > str2.length())
+                return "";
+        }    
+        Map<Character, Integer> map = new HashMap<>();
+        for(char ch : distinct) {
+            map.put(ch, 0);
+        }
+        for(char[] arr : order) {
+            int indegree = map.get(arr[1]);
+            map.put(arr[1], indegree + 1);
+        }
+        String letters = "";
+        Queue<Character> q = new ArrayDeque<>();
+        for(char ch : map.keySet()) {
+            if(map.get(ch) == 0)
+                q.add(ch);
+        }
+        while(!q.isEmpty()) {
+            char ch = q.remove();
+            letters += ch;
+            for(char[] arr : order) {
+                if(arr[0] == ch) {
+                    map.put(arr[1], map.get(arr[1]) - 1);
+                    if(map.get(arr[1]) == 0)
+                        q.add(arr[1]);
+                }
+            }
+        }
+        return letters.length() == distinct.size() ? letters : ""; 
+    }
+}
+```
 ## Important :
 1. Prefix check is required to handle e.g. ["apple", "app"] these type of inputs. 
 2. Don't compare after the first different character, so break; is must
