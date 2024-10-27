@@ -127,52 +127,50 @@ class Solution {
 class Solution {
     public String alienOrder(String[] words) {
         if(words == null || words.length == 0)
-            return "";
-        Set<Character> distinct = new HashSet<>();
-        for(String str : words) {
-            for(char ch : str.toCharArray())
-                distinct.add(ch);
-        }   
-        List<char[]> order = new ArrayList<>();
+          return "";
+        Set<Character> allChars = new HashSet<>();  
+        for(String word : words)
+          for(char ch : word.toCharArray())
+             allChars.add(ch);
+
+        Map<Character,Set<Character>> relations = new HashMap<>();
         for(int i = 0; i < words.length - 1; i++) {
-            String str1 = words[i];
-            String str2 = words[i+1];
-            int minLength = Math.min(str1.length(), str2.length());
+            String s1 = words[i];
+            String s2 = words[i+1];
+            if(s1.indexOf(s2) == 0 && s1.length() > s2.length())
+              return "";
+           
+            int minLength = Math.min(s1.length(), s2.length());
             for(int j = 0; j < minLength; j++) {
-                if(str1.charAt(j) != str2.charAt(j)) {
-                    order.add(new char[]{str1.charAt(j) , str2.charAt(j)});
+                char ch1 = s1.charAt(j);
+                char ch2 = s2.charAt(j);
+                if(ch1 != ch2) {
+                    relations.putIfAbsent(ch2, new HashSet<Character>());
+                    relations.get(ch2).add(ch1);
                     break;
                 }
             }
-            if(str1.startsWith(str2) && str1.length() > str2.length())
-                return "";
-        }    
-        Map<Character, Integer> map = new HashMap<>();
-        for(char ch : distinct) {
-            map.put(ch, 0);
         }
-        for(char[] arr : order) {
-            int indegree = map.get(arr[1]);
-            map.put(arr[1], indegree + 1);
+        StringBuilder order = new StringBuilder();
+        Queue<Character> queue = new LinkedList<>();
+        for(char ch : allChars){
+            if(!relations.containsKey(ch))
+              queue.add(ch);
         }
-        String letters = "";
-        Queue<Character> q = new ArrayDeque<>();
-        for(char ch : map.keySet()) {
-            if(map.get(ch) == 0)
-                q.add(ch);
-        }
-        while(!q.isEmpty()) {
-            char ch = q.remove();
-            letters += ch;
-            for(char[] arr : order) {
-                if(arr[0] == ch) {
-                    map.put(arr[1], map.get(arr[1]) - 1);
-                    if(map.get(arr[1]) == 0)
-                        q.add(arr[1]);
+        while(!queue.isEmpty()) {
+            char ch = queue.remove();
+            order.append(ch);
+            for(char c : relations.keySet()) {
+                Set<Character> set = relations.get(c);
+                if(set.contains(ch)) {
+                    set.remove(ch);
+                    if(set.size() == 0) {
+                        queue.add(c);
+                    }
                 }
             }
         }
-        return letters.length() == distinct.size() ? letters : ""; 
+        return order.length() == allChars.size() ? order.toString() : "";    
     }
 }
 ```
